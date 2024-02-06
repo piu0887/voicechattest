@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
     
 const Server = process.env.NODE_ENV === 'production'
     ? 'https://www.jungleweb.duckdns.org:1111/'
-    : 'https://www.jungleweb.duckdns.org:1111/';
+    : 'http://localhost:1111/';
 
     
     const socket = io(Server);

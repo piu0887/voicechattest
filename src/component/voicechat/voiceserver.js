@@ -1,10 +1,10 @@
 // import express from 'express';
-import https from "https"
+import http from "http"
 import { Server } from "socket.io"
 
 
 // const app = express();
-const httpServer = https.createServer((request, response) => {
+const httpServer = http.createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'text/plain' })
     response.end('okay')
 });
@@ -16,6 +16,8 @@ const io = new Server(httpServer, {
     }
 });
 
+
+const PORT = process.env.PORT || 1111;
 
 let users = [];
 
