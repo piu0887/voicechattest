@@ -1,0 +1,140 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;  /* 텍스트 블록 줄 간격 */
+  font-weight: 400;
+  text-align: center;
+
+  color-scheme: light;  /* 라이트 모드만 지원 */
+  background-color: #fafafa;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+body {
+  min-width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20;
+  display: flex;
+  place-items: center;
+  overflow: hidden;
+  justify-content: center;
+}
+
+#container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex; 
+  justify-content: center; 
+  flex-direction: row; 
+}
+
+#room-header-controls {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: flex-end; 
+  width: 90%; 
+}
+
+#welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#center-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 화면 전체 높이만큼 요소를 채우도록 설정 */
+  text-align: center; /* 내용을 가로로 가운데 정렬 */
+}
+
+.tool-CURSOR {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/cursor.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-HAND {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/cursor.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-PEN {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/pen.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-HIGHLIGHTER {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/highlighter.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-ERASER {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/eraser.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-MINDMAP {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/mindmap.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-POSTIT {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/postit.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-STAMP {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/stamp.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-SHAPE {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/shapes.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+.tool-TEXT {
+  width: 24px;
+  height: 24px;
+  background-image: url('./assets/text.svg');
+  background-size: 100% 100%;
+  pointer-events: none; /* 이 div가 마우스 이벤트를 방해하지 않도록 설정 */
+}
