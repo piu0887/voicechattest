@@ -1,4 +1,3 @@
-// import express from 'express';
 import http from "http"
 import { Server } from "socket.io"
 
@@ -8,6 +7,7 @@ const httpServer = http.createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'text/plain' })
     response.end('okay')
 });
+
 const io = new Server(httpServer, {
     cors: {
         //origin: "", // 모든 도메인 허용
@@ -32,7 +32,6 @@ function addUser({ id, nickname, room }) {
     const user = { id, nickname, room };
     users.push(user);
     console.log("유저목록에 추가했습니다.");
-    console.log(users);
 
     if (existingUser) {
         return { error: '이미 존재하는 사용자 이름입니다.' };
@@ -40,7 +39,6 @@ function addUser({ id, nickname, room }) {
 
 
     return { user }; // 성공적으로 추가된 경우, 오류 없이 사용자 정보 반환
-    console.log(user);
 }
 
 function getUsersInRoom(room) {
@@ -109,13 +107,14 @@ io.on('connection', (socket) => {
 
     socket.on("offer", ({ offer, room }) => {
         socket.to(room).emit("offer", { offer, room });
+        console.log("offer받음");
     });
 
     socket.on("answer", ({ answer, room }) => {
         socket.to(room).emit("answer", { answer, room });
     });
 
-    socket.on("candidate", ({ candidate, room }) => {
+    socket.on("icecandidate", ({ candidate, room }) => {
         socket.to(room).emit("candidate", candidate);
     });
 

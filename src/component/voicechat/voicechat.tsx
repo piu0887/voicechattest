@@ -7,50 +7,49 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import { io } from 'socket.io-client';
 import { useLocation, useNavigate } from 'react-router-dom';
-    
+
+
 const Server = process.env.NODE_ENV === 'production'
     ? 'https://www.jungleweb.duckdns.org:1111/'
     : 'http://localhost:1111/';
 
-    
-    const socket = io(Server);
-    
-    const VoiceChat: React.FC = () => {
-        
-        const location = useLocation();
-        
-        
-        const [room, setRoom] = useState<string>("defaultRoom");
-        
-        
-        const myAudio = useRef<HTMLAudioElement>(null);
-        const peerAudio = useRef<any>(null);
-        // location.state || { nickname: ''};
-        const [users, setUsers] = useState<Array<string>>([]);
-        const [myMuted, setMyMuted] = useState<boolean>(false);
-        const [myStream, setMyStream] = useState<MediaStream | null>();
-        const navigate = useNavigate();
-        
-        
-        useEffect(() => {
-        const {nickname} = location.state || { nickname: ''};
 
-        
+const VoiceChat: React.FC = () => {
+
+    const socket = io(Server);
+    const location = useLocation();
+
+
+    const [room, setRoom] = useState<string>("defaultRoom");
+
+
+    const myAudio = useRef<HTMLAudioElement>(null);
+    const peerAudio = useRef<any>(null);
+    // location.state || { nickname: ''};
+    const [users, setUsers] = useState<Array<string>>([]);
+    const [myMuted, setMyMuted] = useState<boolean>(false);
+    const [myStream, setMyStream] = useState<MediaStream | null>();
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const { nickname } = location.state || { nickname: '' };
+
+
         console.log(nickname);
         if (nickname && room) {
             // 'join' 이벤트를 서버로 emit
-            
-            socket.emit('join', { nickname: nickname, room: room }), 
-            (error: any) => {
-                if (error) {
-                    alert(error);
-                    navigate('/');
-                }
-            };
+
+            socket.emit('join', { nickname: nickname, room: room }),
+                (error: any) => {
+                    if (error) {
+                        alert(error);
+                        navigate('/');
+                    }
+                };
         }
         console.log("join메세지를 보냄");
-        
-        socket.emit('rtc_start', room)
+
     }, [location.state, navigate]);
 
 
@@ -59,15 +58,12 @@ const Server = process.env.NODE_ENV === 'production'
         // 'roomData' 이벤트를 수신하여 방 정보와 사용자 목록 업데이트
         socket.on('roomData', ({ room, users }) => {
             setRoom(room);
-            setUsers(users); 
+            setUsers(users);
+            console.log(users);
+            console.log("roomdata 메세지받음");
         });
-        console.log("roomdata 메세지받음");
+
         console.log(users);
-        
-        
-        return () => {
-            socket.off('roomData');
-        };
     }, []);
 
     // media setup
@@ -75,10 +71,25 @@ const Server = process.env.NODE_ENV === 'production'
         let stream: MediaStream | null = null;
         let peerConnection: RTCPeerConnection = new RTCPeerConnection();
 
-        peerConnection = new RTCPeerConnection();
+        peerConnection = new RTCPeerConnection({
+            iceServers: [
+                {
+                    urls: [
+                        "stun:stun.l.google.com:19302",
+                    ],
+                },
+            ],
+        });
         const startMedia = async () => {
             const getMedia = async () => {
-                const contraints = { audio: true, video: false };
+                const contraints = {
+                    audio: {
+                        echoCancellation: true, // 에코 취소 활성화
+                        noiseSuppression: true, // 배경 소음 억제 활성화
+                        autoGainControl: true // 자동 이득 제어 활성화
+                    },
+                    video: false
+                };
                 try {
                     stream = await navigator.mediaDevices.getUserMedia(contraints);
                     if (myAudio.current) {
@@ -101,7 +112,7 @@ const Server = process.env.NODE_ENV === 'production'
         };
 
         startMedia();
-        
+
         peerConnection.ontrack = ({ streams }) => {
             if (peerAudio.current) {
                 peerAudio.current.srcObject = streams[0];
@@ -116,7 +127,7 @@ const Server = process.env.NODE_ENV === 'production'
                 socket.emit('candidate', { candidate, room });
             });
             console.log("candidate 메세지 보냄?");
-            
+
 
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
@@ -163,11 +174,11 @@ const Server = process.env.NODE_ENV === 'production'
 
 
 
-    function leaveRoom () {
+    function leaveRoom() {
 
         socket.emit('leave-room', async (nickname: any) => {
             console.log(`${nickname} : leave the room`);
-            
+
         })
 
         navigate("/");
@@ -204,6 +215,12 @@ const Server = process.env.NODE_ENV === 'production'
                 <Button onClick={handleMyMuted}>
                     {myMuted ? <MicOffIcon /> : <MicIcon />}
                 </Button>
+                <Button onClick={() => {
+                    socket.emit('rtc_start', room);
+                }}
+                >
+                    Start
+                </Button>
                 <Button onClick={leaveRoom}>
                     <LogoutIcon />
                 </Button>
@@ -214,7 +231,6 @@ const Server = process.env.NODE_ENV === 'production'
 };
 
 export default VoiceChat;
-
 // const initRtc = async () => {
 //     const token = null
 //     const rtcClient: IAgoraRTCClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
